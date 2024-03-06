@@ -35,7 +35,5 @@ for (i in (1:25)) {
   d <- d+7
 }
 
-ggplot(access, aes(total_time25)) +
-  geom_histogram()
 
 

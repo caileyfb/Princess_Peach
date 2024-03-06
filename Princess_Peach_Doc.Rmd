@@ -44,3 +44,6 @@ for (i in (1:25)) {
 
 ```
 
+```{r demographics}
+demographics <- data_frame("Class" = c("Patients", "Control Group"), "Age" = c(71.5, 68.9), "Education" = c(10.8, 12.9), "#Women" = c(46,51), "#Men" = c(44,39))
+```
