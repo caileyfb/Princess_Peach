@@ -12,7 +12,7 @@ library(readr)
 full <- read_csv("diagnosing_AD_data.csv")
 library(dplyr) #needed for the %>% function in the data subset loops
 library(ggplot2)
-library(tidyverse)
+library(knitr)
 
 ```
 
@@ -112,38 +112,130 @@ head(df25)
 ```
 ```{r}
 
-#task25subset
+#task23subset
 
 d <- 2
 
 
-for (i in (1:25)) {
-  df25 <- data.frame(access[1], access[d:(d+6)])
-  df25 <- df25 %>%
+for (i in (1:23)) {
+  df23 <- data.frame(access[1], access[d:(d+6)])
+  df23 <- df23 %>%
     mutate(access[177])
   
   assign( paste("Task", i, sep = "_"), df)
   d <- d+7
 }
 
-head(df25)
-
-#task25,featuretotaltime
-
-df25 %>% group_by("Class" = class) %>%
-  summarise("Count" = n(),
-           "Average air time" = mean(air_time25, na.rm = T)) %>%
-  kable(digits = 2, booktabs = T)
-
-airhisto <- ggplot()+
-  geom_boxplot(data = df25,
-               x = class,
-               y= air_time25)
+head(df23)
 
 
 
 ```
 
+```{r}
+
+#task14subset
+
+d <- 2
+
+
+for (i in (1:14)) {
+  df14 <- data.frame(access[1], access[d:(d+6)])
+  df14 <- df14 %>%
+    mutate(access[177])
+  
+  assign( paste("Task", i, sep = "_"), df)
+  d <- d+7
+}
+
+head(df14)
+
+mean_data <- aggregate(max_x_extension14 ~ class, data = df14, FUN = mean)
+
+ggplot() + theme_bw()+
+  geom_histogram(aes(x = max_x_extension14, fill = class),
+                          data = df14, 
+                          bins = 100,
+                          alpha = 0.5)+
+  facet_wrap(~class)+
+  scale_fill_discrete(name="Health Condition",
+                         breaks=c("H", "P"),
+                         labels=c("Healthy", "Alzheimer's Patient"))+
+   geom_vline(data = mean_data, aes(xintercept = max_x_extension14, color = class),
+             linetype = "dashed", size = 1, show.legend = FALSE)+
+  labs(x= "Maximum X Extension", y = "Count")+
+  ggtitle("Task 14 Maximum X Extension Distribution" )
+  
+
+```
+
+```{r}
+#task14subset
+
+d <- 2
+
+
+for (i in (1:10)) {
+  df10 <- data.frame(access[1], access[d:(d+6)])
+  df10 <- df10 %>%
+    mutate(access[177])
+  
+  assign( paste("Task", i, sep = "_"), df)
+  d <- d+7
+}
+
+head(df10)
+
+ggplot() + theme_bw()+
+  geom_histogram(aes(x = air_time10, fill = class),
+                          data = df10, 
+                          bins = 100)+
+  facet_wrap(~class)+ 
+  xlim(0,50000)+
+  labs(x= "Air time (seconds)",
+       y = "Count",
+       fill = "Health Condition")+
+   scale_fill_discrete(name="Health Condition",
+                         breaks=c("H", "P"),
+                         labels=c("Healthy", "Alzheimer's Patient"))+
+  ggtitle("Task 10 Air time Distribution")
+  
+
+
+
+```
+
+```{r}
+
+d <- 2
+
+
+for (i in (1:5)) {
+  df5 <- data.frame(access[1], access[d:(d+6)])
+  df5 <- df5 %>%
+    mutate(access[177])
+  
+  assign( paste("Task", i, sep = "_"), df)
+  d <- d+7
+}
+
+head(df5)
+
+ggplot() + theme_bw()+
+  geom_histogram(aes(x = disp_index5, fill = class),
+                          data = df5, 
+                          bins = 100)+
+  facet_wrap(~class)+
+  labs(x= "Dispersion Index",
+       y = "Count",
+       fill = "Health Condition")+
+   scale_fill_discrete(name="Health Condition",
+                         breaks=c("H", "P"),
+                         labels=c("Healthy", "Alzheimer's Patient"))+
+  ggtitle("Task 5 Dispersion Index Distribution")
+
+
+```
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

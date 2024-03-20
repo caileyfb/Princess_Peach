@@ -35,3 +35,27 @@ for (i in (1:25)) {
   d <- d+7
 }
 
+
+# playing around with SVM
+set.seed(10111)
+x = matrix(rnorm(40), 20, 2)
+y = rep(c(-1, 1), c(10, 10))
+x[y == 1,] = x[y == 1,] + 1
+plot(x, col = y + 3, pch = 19)
+
+
+dat = data.frame(x, y = as.factor(y))
+svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE)
+print(svmfit)
+
+plot(svmfit, dat)
+
+make.grid = function(x, n = 75) {
+  grange = apply(x, 2, range)
+  x1 = seq(from = grange[1,1], to = grange[2,1], length = n)
+  x2 = seq(from = grange[1,2], to = grange[2,2], length = n)
+  expand.grid(X1 = x1, X2 = x2)
+}
+
+xgrid = make.grid(x)
+xgrid[1:10,]
