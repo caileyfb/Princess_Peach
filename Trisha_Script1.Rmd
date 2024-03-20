@@ -1,0 +1,277 @@
+---
+title: "Trisha_Script"
+author: "Trisha Henderson"
+date: "2024-03-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr) #needed for the %>% function in the data subset loops
+library(ggplot2)
+#install.packages("GGally")
+library("GGally")
+```
+
+## R Markdown
+
+```{r}
+diagnosing_AD_data <- read_csv("diagnosing_AD_data.csv", show_col_types = FALSE) %>%
+  mutate(class = case_when(class == "H" ~ 0,
+                           class == "P" ~ 1))
+
+task1 <- diagnosing_AD_data %>%
+  select(ends_with("e1"), ends_with("x1"), ends_with("r1"), ends_with("n1"), ends_with("t1"))
+
+task2 <- diagnosing_AD_data %>%
+  select(ends_with("e2"), ends_with("x2"), ends_with("r2"), ends_with("n2"), ends_with("t2"))
+
+task3 <- diagnosing_AD_data %>%
+  select(ends_with("e3"), ends_with("x3"), ends_with("r3"), ends_with("n3"), ends_with("t3"))
+
+task4 <- diagnosing_AD_data %>%
+  select(ends_with("e4"), ends_with("x4"), ends_with("r4"), ends_with("n4"), ends_with("t4"))
+
+task5 <- diagnosing_AD_data %>%
+  select(ends_with("e5"), ends_with("x5"), ends_with("r5"), ends_with("n5"), ends_with("t5"))
+
+task6 <- diagnosing_AD_data %>%
+  select(ends_with("e6"), ends_with("x6"), ends_with("r6"), ends_with("n6"), ends_with("t6"))
+
+task7 <- diagnosing_AD_data %>%
+  select(ends_with("e7"), ends_with("x7"), ends_with("r7"), ends_with("n7"), ends_with("t7"))
+
+task8 <- diagnosing_AD_data %>%
+  select(ends_with("e8"), ends_with("x8"), ends_with("r8"), ends_with("n8"), ends_with("t8"))
+
+task9 <- diagnosing_AD_data %>%
+  select(ends_with("e9"), ends_with("x9"), ends_with("r9"), ends_with("n9"), ends_with("t9"))
+
+task10 <- diagnosing_AD_data %>%
+  select(ends_with("10"))
+
+task11 <- diagnosing_AD_data %>%
+  select(ends_with("11"))
+
+task12 <- diagnosing_AD_data %>%
+  select(ends_with("12"))
+
+task13 <- diagnosing_AD_data %>%
+  select(ends_with("13"))
+
+task14 <- diagnosing_AD_data %>%
+  select(ends_with("14"))
+
+task15 <- diagnosing_AD_data %>%
+  select(ends_with("15"))
+
+task16 <- diagnosing_AD_data %>%
+  select(ends_with("16"))
+
+task17 <- diagnosing_AD_data %>%
+  select(ends_with("17"))
+
+task18 <- diagnosing_AD_data %>%
+  select(ends_with("18"))
+
+task19 <- diagnosing_AD_data %>%
+  select(ends_with("19"))
+
+task20 <- diagnosing_AD_data %>%
+  select(ends_with("20"))
+
+task21 <- diagnosing_AD_data %>%
+  select(ends_with("21"))
+
+task22 <- diagnosing_AD_data %>%
+  select(ends_with("22"))
+
+task23 <- diagnosing_AD_data %>%
+  select(ends_with("23"))
+
+task24 <- diagnosing_AD_data %>%
+  select(ends_with("24"))
+
+task25 <- diagnosing_AD_data %>%
+  select(ends_with("25"))
+
+
+```
+
+\hstart
+the above is showing the 25 different tasks, using the full data set. the first 9 tasks have additional 'ends with' sections because if not, tasks from 11 and 21 would mix in with them. I used a minimal amount of additions to act as catch alls, to reduce coding time
+\hstop
+
+```{r}
+ggpairs(task1)
+```
+
+
+
+```{r}
+smalldata <- diagnosing_AD_data %>%
+  select(starts_with("air"), starts_with("disp"), starts_with("max_x"), starts_with("max_y"), starts_with("num"), starts_with("paper"), starts_with("total"))
+```
+
+\hstart
+this is the small data, that is showing only the 7 tasks we chose that can be considered accessible. 
+\hstop
+
+```{r}
+
+t1 <- smalldata %>%
+  select(ends_with("e1"), ends_with("x1"), ends_with("n1"))
+
+t2 <- smalldata %>%
+  select(ends_with("e2"), ends_with("x2"), ends_with("n2"))
+
+t3 <- smalldata %>%
+  select(ends_with("e3"), ends_with("x3"), ends_with("n3"))
+
+t4 <- smalldata %>%
+  select(ends_with("e4"), ends_with("x4"), ends_with("n4"))
+
+t5 <- smalldata %>%
+  select(ends_with("e5"), ends_with("x5"), ends_with("n5"))
+
+t6 <- smalldata %>%
+  select(ends_with("e6"), ends_with("x6"), ends_with("n6"))
+
+t7 <- smalldata %>%
+  select(ends_with("e7"), ends_with("x7"), ends_with("n7"))
+
+t8 <- smalldata %>%
+  select(ends_with("e8"), ends_with("x8"), ends_with("n8"))
+
+t9 <- smalldata %>%
+  select(ends_with("e9"), ends_with("x9"), ends_with("n9"))
+
+t10 <- smalldata %>%
+  select(ends_with("10"))
+
+t11 <- smalldata %>%
+  select(ends_with("11"))
+
+t12 <- smalldata %>%
+  select(ends_with("12"))
+
+t13 <- smalldata %>%
+  select(ends_with("13"))
+
+t14 <- smalldata %>%
+  select(ends_with("14"))
+
+t15 <- smalldata %>%
+  select(ends_with("15"))
+
+t16 <- smalldata %>%
+  select(ends_with("16"))
+
+t17 <- smalldata %>%
+  select(ends_with("17"))
+
+t18 <- smalldata %>%
+  select(ends_with("18"))
+
+t19 <- smalldata %>%
+  select(ends_with("19"))
+
+t20 <- smalldata %>%
+  select(ends_with("20"))
+
+t21 <- smalldata %>%
+  select(ends_with("21"))
+
+t22 <- smalldata %>%
+  select(ends_with("22"))
+
+t23 <- smalldata %>%
+  select(ends_with("23"))
+
+t24 <- smalldata %>%
+  select(ends_with("24"))
+
+t25 <- smalldata %>%
+  select(ends_with("25"))
+
+```
+
+
+\hstart
+this is the small data tasks that we can use for the pairs plots
+\hstop
+
+```{r}
+pairs(t1) + title("Task 1 Features")
+pairs(t2) 
+pairs(t3)
+pairs(t4)
+pairs(t5)
+pairs(t6)
+pairs(t7)
+pairs(t8)
+pairs(t9)
+pairs(t10)
+pairs(t11)
+pairs(t12)
+pairs(t13)
+```
+
+\hstart
+1st half of the pairs plots for the small data
+\hstop
+
+```{r}
+pairs(t14)
+pairs(t15)
+pairs(t16)
+pairs(t17)
+pairs(t18)
+pairs(t19)
+pairs(t20)
+pairs(t21)
+pairs(t22)
+pairs(t23)
+pairs(t24)
+pairs(t25)
+```
+
+```{r}
+ggpairs(t1, progress = FALSE)
+ggpairs(t2, progress = FALSE)
+ggpairs(t3, progress = FALSE)
+ggpairs(t4, progress = FALSE)
+ggpairs(t5, progress = FALSE)
+ggpairs(t6, progress = FALSE)
+ggpairs(t7, progress = FALSE)
+ggpairs(t8, progress = FALSE)
+ggpairs(t9, progress = FALSE)
+ggpairs(t10, progress = FALSE)
+ggpairs(t11, progress = FALSE)
+ggpairs(t12, progress = FALSE)
+ggpairs(t13, progress = FALSE)
+```
+
+```{r}
+ggpairs(t14, progress = FALSE)
+ggpairs(t15, progress = FALSE)
+ggpairs(t16, progress = FALSE)
+ggpairs(t17, progress = FALSE)
+ggpairs(t18, progress = FALSE)
+ggpairs(t19, progress = FALSE)
+ggpairs(t20, progress = FALSE)
+ggpairs(t21, progress = FALSE)
+ggpairs(t22, progress = FALSE)
+ggpairs(t23, progress = FALSE)
+ggpairs(t24, progress = FALSE)
+ggpairs(t25, progress = FALSE)
+```
+
+```{r}
+plz <- ggpairs(smalldata$t18, ggplot2(color=diagnosing_AD_data$class))
+
+plz
+  
+```
+
