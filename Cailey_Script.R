@@ -1,9 +1,10 @@
-
+#packages
 library(readr)
 full <- read_csv("diagnosing_AD_data.csv")
 library(dplyr) #needed for the %>% function in the data subset loops
 library(ggplot2)
 
+#accessible data
 a=1
 b=6
 c=15
@@ -24,6 +25,8 @@ access <- access %>%
 
 access <- subset(access, select = -(matrix.nrow...174.))
 
+#separating the tasks
+
 d <- 2
 
 for (i in (1:25)) {
@@ -37,25 +40,17 @@ for (i in (1:25)) {
 
 
 # playing around with SVM
-set.seed(10111)
+set.seed(2024)
 x = matrix(rnorm(40), 20, 2)
 y = rep(c(-1, 1), c(10, 10))
 x[y == 1,] = x[y == 1,] + 1
 plot(x, col = y + 3, pch = 19)
 
-
 dat = data.frame(x, y = as.factor(y))
 svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE)
 print(svmfit)
 
-plot(svmfit, dat)
+#SVM test model data, task 1
+library(e1071)
+set.seed(2024)
 
-make.grid = function(x, n = 75) {
-  grange = apply(x, 2, range)
-  x1 = seq(from = grange[1,1], to = grange[2,1], length = n)
-  x2 = seq(from = grange[1,2], to = grange[2,2], length = n)
-  expand.grid(X1 = x1, X2 = x2)
-}
-
-xgrid = make.grid(x)
-xgrid[1:10,]
