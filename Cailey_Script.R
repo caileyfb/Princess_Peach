@@ -53,4 +53,6 @@ print(svmfit)
 #SVM test model data, task 1
 library(e1071)
 set.seed(2024)
-
+svm_task1 <- svm(as.factor(class) ~ ., data = Task_1)
+summary(svm_task1)
+table(Task_1$class, predict(svm_task1, Task_1, type = "class"))
