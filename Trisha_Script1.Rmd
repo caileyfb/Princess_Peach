@@ -12,6 +12,13 @@ library(dplyr) #needed for the %>% function in the data subset loops
 library(ggplot2)
 #install.packages("GGally")
 library("GGally")
+library(knitr)
+library(xtable)
+#install.packages("jtools")
+library("jtools")
+#install.packages("devtools")
+#install.packages("stargazer")
+library(stargazer)
 ```
 
 ## R Markdown
@@ -111,7 +118,7 @@ ggpairs(task1)
 
 ```{r}
 smalldata <- diagnosing_AD_data %>%
-  select(starts_with("air"), starts_with("disp"), starts_with("max_x"), starts_with("max_y"), starts_with("num"), starts_with("paper"), starts_with("total"))
+  select(starts_with("air"), starts_with("disp"), starts_with("max_x"), starts_with("max_y"), starts_with("num"), starts_with("paper"), starts_with("total"), starts_with("class"))
 ```
 
 \hstart
@@ -237,6 +244,10 @@ pairs(t24)
 pairs(t25)
 ```
 
+\hstart
+2nd half of the pairs plots for the small data
+\hstop
+
 ```{r}
 ggpairs(t1, progress = FALSE)
 ggpairs(t2, progress = FALSE)
@@ -253,6 +264,10 @@ ggpairs(t12, progress = FALSE)
 ggpairs(t13, progress = FALSE)
 ```
 
+\hstart
+NICE VERSION of 1st half of the pairs plots for the small data
+\hstop
+
 ```{r}
 ggpairs(t14, progress = FALSE)
 ggpairs(t15, progress = FALSE)
@@ -268,10 +283,38 @@ ggpairs(t24, progress = FALSE)
 ggpairs(t25, progress = FALSE)
 ```
 
-```{r}
-plz <- ggpairs(smalldata$t18, ggplot2(color=diagnosing_AD_data$class))
+\hstart
+NICE VERSION of 2nd half of the pairs plots for the small data
+\hstop
 
-plz
-  
+```{r}
+g1 <- glm(class ~ air_time1 + paper_time1 + disp_index1 + max_x_extension1 + max_y_extension1 + num_of_pendown1, data = diagnosing_AD_data, family=binomial(link="logit"))
+g1
+
+
+g2 <- glm(class ~ air_time2 + paper_time2 + disp_index2 + max_x_extension2 + max_y_extension2 + num_of_pendown2, data = diagnosing_AD_data, family=binomial(link="logit"))
+
+print(summ(g2,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
+
+stargazer(g2, type="latex",
+          dep.var.labels=c("Miles/(US) gallon","Fast car (=1)"),
+          covariate.labels=c("Gross horsepower","Rear axle ratio","Four foward
+                             gears", "Five forward gears","Type of transmission
+                             (manual=1)"), out="models.htm")
+
 ```
 
+\hstart
+yay logistic regression model start (NOT the final draft)
+\hstop
+
+
+```{r mylatextable, results = "asis"}
+stargazer(g2, type = 'text', out='foo.html', title="Logistic Regression Results for Task 2 Model",covariate.labels=c("Air Time","Paper Time",
+"Dispersment Index","Maximum X Extension","Maximum Y Extension","Number of Pendowns"), dep.var.labels=c("Class"), no.space=TRUE, single.row=TRUE)
+```
+
+
+\hstart
+1st attempt for graph of many. for small data task1
+\hstop
