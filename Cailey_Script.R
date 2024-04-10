@@ -60,10 +60,20 @@ table(Task_1$class, predict(svm_task1, Task_1, type = "class"))
 
 #SVM with grid search
 set.seed(2024)
+library(caret)
 svm_model <- function(task, kern){
   #get rid of ID 
+  #divide data
+  #grid search
+  hyper_grid <- expand.grid(cost = c(0.5, 1.0, 1.5))
+  control <- trainControl(method = "cv", number = 5)
+  
+  
+  
   svm_task <- svm(as.factor(class) ~ ., data = task, kernel = kern)
-  print(summary(svm_task))}
+  print(summary(svm_task))
+  table(task$class, predict(svm_task, task, type = "class"))
+  }
 
 svm_model(Task_1, "linear")
   
