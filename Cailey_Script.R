@@ -3,6 +3,7 @@ library(readr)
 full <- read_csv("diagnosing_AD_data.csv")
 library(dplyr) #needed for the %>% function in the data subset loops
 library(ggplot2)
+library(lattice)
 
 #accessible data
 a=1
