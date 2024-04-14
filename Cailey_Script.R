@@ -3,6 +3,7 @@ library(readr)
 full <- read_csv("diagnosing_AD_data.csv")
 library(dplyr) #needed for the %>% function in the data subset loops
 library(ggplot2)
+library(lattice)
 
 #accessible data
 a=1
@@ -53,6 +54,28 @@ print(svmfit)
 #SVM test model data, task 1
 library(e1071)
 set.seed(2024)
+
 svm_task1 <- svm(as.factor(class) ~ ., data = Task_1)
 summary(svm_task1)
 table(Task_1$class, predict(svm_task1, Task_1, type = "class"))
+
+#SVM with grid search
+set.seed(2024)
+library(caret)
+svm_model <- function(task, kern){
+  #get rid of ID 
+  #divide data
+  #grid search
+  hyper_grid <- expand.grid(cost = c(0.5, 1.0, 1.5))
+  control <- trainControl(method = "cv", number = 5)
+  
+  
+  
+  svm_task <- svm(as.factor(class) ~ ., data = task, kernel = kern)
+  print(summary(svm_task))
+  table(task$class, predict(svm_task, task, type = "class"))
+  }
+
+svm_model(Task_1, "linear")
+  
+
