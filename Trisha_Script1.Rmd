@@ -318,3 +318,10 @@ stargazer(g2, type = 'text', out='foo.html', title="Logistic Regression Results 
 \hstart
 1st attempt for graph of many. for small data task1
 \hstop
+
+
+
+
+\hstart
+will be using overall data for logistic regression
+\hstop
