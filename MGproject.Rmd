@@ -148,6 +148,7 @@ for (i in (1:14)) {
   d <- d+7
 }
 
+
 head(df14)
 
 mean_data <- aggregate(max_x_extension14 ~ class, data = df14, FUN = mean)
@@ -236,6 +237,171 @@ ggplot() + theme_bw()+
 
 
 ```
+
+##### Notes for steps to take #####
+
+- recreate their data
+    - divide dataset into training and test
+    - exp1. uses entire dataset to train classifiers, no dividing by task
+    - exp2. tests all classifiers. divides each time a single task on which each classifier is trained.
+    - exp3. tests all classifiers again but only one run performed
+    - exp4. combines outputs of classifier outputs through majority vote strategy
+    - exp5. similar to exp1. uses features from a subset set of tasks, subset chosen by classification used.
+    
+- do it with our own dataset
+  - basically do exp1 for just RF ???
+  
+THEIR random forest code translated to R via chatgpt
+
+library(caret)
+
+# Define the parameter grid
+
+param_grid <- expand.grid(
+  .n_estimators = c(100, 150, 200, 250, 300),
+  .max_depth = c(3, 4, 5, 6, 7, 8, 9),
+  .bootstrap = c(TRUE, FALSE)
+)
+
+# Define the training control for cross-validation
+
+train_control <- trainControl(method = "cv", number = cross_val)
+
+# Define the random forest model
+
+model <- train(
+  x = x_train,
+  y = y_train,
+  method = "rf",
+  trControl = train_control,
+  tuneGrid = param_grid,
+  metric = "Accuracy"
+  
+)
+
+```{r}
+
+install.packages("randomForest")
+#install.packages("superml")
+#library(superml)
+library(randomForest)
+library(ggplot2)
+set.seed(147)
+head(access)
+
+class(access)
+
+access$class = as.character(access$class)
+access$class = factor(access$class)
+
+rfmodel <- randomForest(class ~ ., data = access, ntree= 51, importance = TRUE)
+
+summary(rfmodel)
+
+```
+
+```{r}
+#divide dataset
+
+library(lattice)
+library(caret)
+
+sampsize <- floor(0.8*nrow(access))
+
+sampsize
+
+set.seed(49)
+train_set <- sample(seq_len(nrow(access)), size = sampsize)
+
+train <- access[train_set, ]
+test <- access[-train_set, ]
+
+
+
+#trainControl(
+ # method = "oob",
+ # repeats = 5, 
+ # search = "grid(define this)" ,
+ # savePredictions = "final", 
+#)
+
+train(x = access,
+      ... = rfmodel,
+                        ))
+
+
+#train_control <- trainControl(method = "cv", number = cross_val)
+
+
+```
+
+
+
+```{r}
+
+# result <- data.frame(test$class, predict(rf.testing, type = "response"))
+
+
+param_grid <- list(
+  list(clf__n_estimators = c(100, 150, 200, 250, 300),
+       clf__max_depth = c(3, 4, 5, 6, 7, 8, 9)),
+  list(clf__bootstrap = FALSE,
+       clf__n_estimators = c(100, 150, 200, 250, 300),
+       clf__max_depth = c(3, 4, 5, 6, 7, 8, 9))
+)
+
+
+
+# Define model
+
+model <- rfmodel
+
+library(superml)
+
+scoring = 'accuracy' 
+cross_val = 5
+  
+  
+GridSearchCV(trainer = model,
+                            parameters = param_grid,
+                            n_folds = 5,
+              scoring = accuracy)
+
+
+
+
+
+```
+
+#to see decision tree nodes
+dot_data = sklearn.tree.export_graphviz(model, out_file=None,
+                                       feature_names = train_X.columns,
+                                       filled = True)
+ 
+graph = graphviz.Source(dot_data)
+ 
+# saving tree to png file
+png_bytes = graph.pipe(format='png')
+with open('decision_tree.png','wb') as f:
+    f.write(png_bytes)
+
+
+# tuning process
+
+best_model <- model$finalModel
+
+# Make predictions on the test set
+
+predictions <- predict(best_model, newdata = x_test)
+
+  # Make predictions on the test set
+  
+  predictions <- predict(best_model, newdata = x_test[, feature_cols])
+  predictions_TS <- predict(best_model, newdata = x_train[, feature_cols])
+
+
+
+  
 
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
