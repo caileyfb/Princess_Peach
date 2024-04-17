@@ -514,6 +514,7 @@ g1a <- glm((class) ~ .,data = train, family=binomial(link="logit"))
 print(summ(g1a,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g1a)
 predict(g1a, newdata=test, type="response")
+
 ```
 
 
