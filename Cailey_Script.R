@@ -63,19 +63,67 @@ table(Task_1$class, predict(svm_task1, Task_1, type = "class"))
 set.seed(2024)
 library(caret)
 svm_model <- function(task, kern){
-  #get rid of ID 
+  
   #divide data
+  H <- which(task$class == "H") 
+  P <- which(task$class == "P")
+  
+  n_tran_H <- ceiling(0.8 * length(H))
+  n_train_P <- ceiling(0.8 * length(P))
+  
+  train_H <- sample(H, size = n_train_H)
+  train_P <- sample(P, size = n_train_P)
+  
+  train_both <- c(train_H, train_P)
+  train_ID <- task[train_both, ]
+  test_ID <- task[-train_both, ]
+  
+  #remove ID
+  train <- subset(train_ID, select = -ID)
+  test <- subset(test_ID, select = -ID)
+  
   #grid search
-  hyper_grid <- expand.grid(cost = c(0.5, 1.0, 1.5))
-  control <- trainControl(method = "cv", number = 5)
+  cost <- seq(0.5, 1.5, by 0.1)
   
-  
-  
-  svm_task <- svm(as.factor(class) ~ ., data = task, kernel = kern)
+  tune_cost <- train(as.factor(class) ~ ., data = task, kernel = kern)
   print(summary(svm_task))
   table(task$class, predict(svm_task, task, type = "class"))
   }
 
 svm_model(Task_1, "linear")
   
+#SVM task 1
+  
+#divide data
+H <- which(Task_1$class == "H") 
+P <- which(Task_1$class == "P")
+
+n_train_H <- ceiling(0.8 * length(H))
+n_train_P <- ceiling(0.8 * length(P))
+  
+train_H <- sample(H, size = n_train_H)
+train_P <- sample(P, size = n_train_P)
+  
+train_both <- c(train_H, train_P)
+train_ID <- Task_1[train_both, ]
+test_ID <- Task_1[-train_both, ]
+  
+  #remove ID
+train <- subset(train_ID, select = -ID)
+test <- subset(test_ID, select = -ID)
+  
+  #grid search
+costs <- seq(from = 0.5, to = 1.5, by = 0.1)
+  
+tune_cost <- tune(svm, as.factor(class) ~ ., data = train, ranges = list(cost = costs), kernel = "radial", cross =5)
+  
+best_cost <- tune_cost$best.parameters$cost
+
+svm_task1 <- svm(as.factor(class) ~ ., data = train, kernel = "radial", cost = best_cost, gamma = 1)
+
+testing <- predict(svm_task1, test)
+
+confusionMatrix(testing, as.factor(test$class))
+
+summary(svm_task1)
 
