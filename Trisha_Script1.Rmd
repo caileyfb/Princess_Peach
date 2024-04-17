@@ -106,6 +106,20 @@ task25 <- diagnosing_AD_data %>%
 
 ```
 
+```{r}
+H <- which(diagnosing_AD_data$class == "0") 
+P <- which(diagnosing_AD_data$class == "1")
+
+n_train_H <- ceiling(0.8 * length(H))
+n_train_P <- ceiling(0.8 * length(P))
+
+train_H <- sample(H, size = n_train_H)
+train_P <- sample(P, size = n_train_P)
+
+train_both <- c(train_H, train_P)
+test <- diagnosing_AD_data[-train_both, ]
+diagnosing_AD_data <- diagnosing_AD_data[train_both, ]
+```
 \hstart
 the above is showing the 25 different tasks, using the full data set. the first 9 tasks have additional 'ends with' sections because if not, tasks from 11 and 21 would mix in with them. I used a minimal amount of additions to act as catch alls, to reduce coding time
 \hstop
@@ -490,13 +504,13 @@ mod 18 is BEST (-109.1087); and mod 15 is WORST (-78.79616)
 \hstop
 
 ```{r}
-test <- subset(diagnosing_AD_data, select = -ID)
-  
+train <- subset(diagnosing_AD_data, select = -ID)
+test <- subset(test, select = -ID)
 ```
 
 
 ```{r}
-g1a <- glm((class) ~ .,data = test, family=binomial(link="logit"))
+g1a <- glm((class) ~ .,data = train, family=binomial(link="logit"))
 print(summ(g1a,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g1a)
 predict(g1a, newdata=test, type="response")
