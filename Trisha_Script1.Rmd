@@ -483,9 +483,36 @@ logLik(g22)
 logLik(g23)
 logLik(g24)
 logLik(g25)
-
 ```
 
 \hstart
 mod 18 is BEST (-109.1087); and mod 15 is WORST (-78.79616)
 \hstop
+
+```{r}
+test <- subset(diagnosing_AD_data, select = -ID)
+  
+```
+
+
+```{r}
+g1a <- glm((class) ~ .,data = test, family=binomial(link="logit"))
+print(summ(g1a,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
+logLik(g1a)
+predict(g1a, newdata=test, type="response")
+```
+
+
+```{r}
+
+Mdata <- smalldata %>%
+  select(ends_with("1"), ends_with("14"), ends_with("18"), ends_with("20"), ends_with("23"))
+
+full <- glm(class ~ air_time + paper_time + disp_index + max_x_extension + max_y_extension + num_of_pendown, data = Cdata, family=binomial(link="logit"))
+
+
+
+
+```
+
+
