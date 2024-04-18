@@ -19,6 +19,9 @@ library("jtools")
 #install.packages("devtools")
 #install.packages("stargazer")
 library(stargazer)
+#install.packages("caret")
+library(lattice)
+library(caret)
 ```
 
 ## R Markdown
@@ -120,6 +123,7 @@ train_both <- c(train_H, train_P)
 test <- diagnosing_AD_data[-train_both, ]
 diagnosing_AD_data <- diagnosing_AD_data[train_both, ]
 ```
+
 \hstart
 the above is showing the 25 different tasks, using the full data set. the first 9 tasks have additional 'ends with' sections because if not, tasks from 11 and 21 would mix in with them. I used a minimal amount of additions to act as catch alls, to reduce coding time
 \hstop
@@ -505,16 +509,38 @@ mod 18 is BEST (-109.1087); and mod 15 is WORST (-78.79616)
 
 ```{r}
 train <- subset(diagnosing_AD_data, select = -ID)
-test <- subset(test, select = -ID)
+train_sub <- train[,1:17]
+mean_sub <- apply(train_sub[,1:17], 2, mean)
+sd_sub <- apply(train_sub[,1:17], 2, sd)
+train_std <- matrix(rep(NA, nrow(train_sub) * ncol(train_sub)), nrow = nrow(train_sub))
+for(i in 1:ncol(train_sub)) {
+  train_std[,i] <- c(train_sub[,i] - mean_sub[i])[[1]]/sd_sub[i]
+}
+test1 <- subset(test, select = -ID)
+train_std <- as.data.frame(train_std)
+colnames(train_std) <- colnames(train_sub)
 ```
 
 
 ```{r}
-g1a <- glm((class) ~ .,data = train, family=binomial(link="logit"))
+g1a <- glm(as.factor(train$class) ~ .,data = train_std, family=binomial(link="logit")) #uses centered and standardized
+g1a_full <- glm(as.factor(train$class) ~ .,data = train_sub, family=binomial(link="logit"))
+# subset the test set in a similar manner (so the first 17 columns), and then center and standardize the way we did above, then test the performance of both models (so the test set thats standardized on g1a and the original test set on g1a_full). if the two perform similarly, just go with the non-stanadraized
+# try to add in variables one at a time until it no longer works
 print(summ(g1a,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g1a)
-predict(g1a, newdata=test, type="response")
 
+pred1<-format(round(predict(g1a,test1)))
+conf <- confusionMatrix(pred1, as.factor(test$class))
+
+```
+
+```{r}
+pred2<-format(round(predict(g2,test1)))
+conf <- confusionMatrix(pred2, as.factor(test$class))
+
+print(confusionMatrix(pred1, test1))
+print(caret::confusionMatrix(pred1, y_test)$class)
 ```
 
 
@@ -523,7 +549,7 @@ predict(g1a, newdata=test, type="response")
 Mdata <- smalldata %>%
   select(ends_with("1"), ends_with("14"), ends_with("18"), ends_with("20"), ends_with("23"))
 
-full <- glm(class ~ air_time + paper_time + disp_index + max_x_extension + max_y_extension + num_of_pendown, data = Cdata, family=binomial(link="logit"))
+full <- glm(class ~ air_time + paper_time + disp_index + max_x_extension + max_y_extension + num_of_pendown, data = Mdata, family=binomial(link="logit"))
 
 
 
