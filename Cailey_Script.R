@@ -83,11 +83,19 @@ svm_model <- function(task, kern){
   test <- subset(test_ID, select = -ID)
   
   #grid search
-  cost <- seq(0.5, 1.5, by 0.1)
+  costs <- seq(from = 0.5, to = 1.5, by = 0.1)
   
-  tune_cost <- train(as.factor(class) ~ ., data = task, kernel = kern)
-  print(summary(svm_task))
-  table(task$class, predict(svm_task, task, type = "class"))
+  tune_cost <- tune(svm, as.factor(class) ~ ., data = train, ranges = list(cost = costs), kernel = kern, cross =5)
+  
+  best_cost <- tune_cost$best.parameters$cost
+  
+  svm_model <- svm(as.factor(class) ~ ., data = train, kernel = kern, cost = best_cost, gamma = 1)
+  
+  testing <- predict(svm_task1, test)
+  
+  confusionMatrix(testing, as.factor(test$class))
+  
+  summary(svm_task1)
   }
 
 svm_model(Task_1, "linear")
