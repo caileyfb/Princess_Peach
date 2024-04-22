@@ -14,6 +14,10 @@ demographics <- data_frame("Class" = c("Patients", "Control Group"), "Age" = c(7
 library(knitr)
 demographics %>%
   kable(col.names = c(" ", "Mean Age", "Mean Education (years)", "Number of Women", "Number of Men"))
+
+library(lattice)
+library(e1071)
+library(caret)
 ```
 
 ```{r}
@@ -48,6 +52,83 @@ trial_confusion %>%
 ```
 
 ```{r}
+a=1
+b=6
+c=15
+access <- data.frame(matrix(nrow=174))
 
+for (i in 1:25) {
+  access <- access %>%
+    mutate(full[a:(a+2)], full[b:(b+1)], full[c:(c+1)])
+  
+  a <- a+18
+  b <- b+18
+  c <- c+18
+  
+}
+
+access <- access %>%
+  mutate(full[451:452])
+
+access <- subset(access, select = -(matrix.nrow...174.))
+
+#separating the tasks
+
+d <- 2
+
+for (i in (1:25)) {
+  df <- data.frame(access[1], access[d:(d+6)])
+  df <- df %>%
+    mutate(access[177])
+  
+  assign( paste("Task", i, sep = "_"), df)
+  d <- d+7
+}
+```
+
+
+```{r}
+set.seed(2024)
+library(caret)
+svm_model <- function(task, kern){
+  
+  #divide data
+  H <- which(task$class == "H") 
+  P <- which(task$class == "P")
+  
+  n_train_H <- ceiling(0.8 * length(H))
+  n_train_P <- ceiling(0.8 * length(P))
+  
+  train_H <- sample(H, size = n_train_H)
+  train_P <- sample(P, size = n_train_P)
+  
+  train_both <- c(train_H, train_P)
+  train_ID <- task[train_both, ]
+  test_ID <- task[-train_both, ]
+  
+  #remove ID
+  train <- subset(train_ID, select = -ID)
+  test <- subset(test_ID, select = -ID)
+  
+  #grid search
+  costs <- seq(from = 0.5, to = 1.5, by = 0.1)
+  
+  tune_cost <- tune(svm, as.factor(class) ~ ., data = train, ranges = list(cost = costs), kernel = kern, cross =5)
+  
+  best_cost <- tune_cost$best.parameters$cost
+  
+  svm_model <- svm(as.factor(class) ~ ., data = train, kernel = kern, cost = best_cost, gamma = 1)
+  
+  testing <- predict(svm_model, test)
+  
+  print(confusionMatrix(testing, as.factor(test$class)))
+  
+  summary(svm_model)
+  }
+```
+
+```{r}
+svm_model(Task_1, "linear")
+svm_model(Task_1, "radial")
 ```
 
