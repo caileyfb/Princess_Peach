@@ -102,7 +102,7 @@ svm_model <- function(task, kern){
   train_H <- sample(H, size = n_train_H)
   train_P <- sample(P, size = n_train_P)
   
-  train_both <- c(train_H, train_P)
+  train_both <- c(train_P, train_H)
   train_ID <- task[train_both, ]
   test_ID <- task[-train_both, ]
   
@@ -117,18 +117,41 @@ svm_model <- function(task, kern){
   
   best_cost <- tune_cost$best.parameters$cost
   
-  svm_model <- svm(as.factor(class) ~ ., data = train, kernel = kern, cost = best_cost, gamma = 1)
+  svm_model <- svm(as.factor(class) ~ ., data = train, kernel = kern, cost = best_cost, gamma = 0.5)
   
   testing <- predict(svm_model, test)
   
   print(confusionMatrix(testing, as.factor(test$class)))
   
   summary(svm_model)
-  }
+}
+
+svm_model(full, "linear")
+
 ```
 
 ```{r}
-svm_model(Task_1, "linear")
-svm_model(Task_1, "radial")
+rep <- 100
+accuracy <- numeric(rep)
+
+for (i in rep) {
+  accuracy_values[i] <- svm_model(full, kern = "linear")
+}
+```
+
+
+
+
+```{r}
+full_model <- data_frame("Kernel" = "Linear", "Accuracy" = 79.41, "Sensitivity" = 82.35, "Specificity" = 76.47)
+
+full_model %>%
+  kable(col.names = c("Kernel", "Accuracy", "Specificity", "Sensitivity"))
+```
+
+
+```{r}
+svm_model(full, "linear")
+svm_model(full, "radial")
 ```
 
