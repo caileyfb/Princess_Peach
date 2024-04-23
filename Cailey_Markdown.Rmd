@@ -126,18 +126,20 @@ svm_model <- function(task, kern){
   summary(svm_model)
 }
 
-svm_model(full, "linear")
-
+svm_model(full, 'linear')
 ```
-
 ```{r}
-rep <- 100
-accuracy <- numeric(rep)
-
-for (i in rep) {
-  accuracy_values[i] <- svm_model(full, kern = "linear")
-}
+accuracy <- c(.8235, 0.7941, 0.9118, 0.7647, 0.8529, 0.7647, 0.7941, 0.7941, 0.7941, 0.9118)
+CI <- c(.8235-.6547, 0.7941-0.621, 0.9118 - 0.7632, 0.7647-0.5883, 0.8529 - 0.6894, 0.7647 - 0.5883, 0.7941- 0.621, 0.7941 - 0.621, 0.7941 - 0.621, 0.9118 - 0.7632)
+sensitivity <- c(0.7647, 0.8824, 0.9412, 0.7647, 0.8235, 0.7647, 0.8824, 0.8824, 0.8235, 0.8824)
+specificity <- c(0.8824, 0.7059, 0.8824, 0.7647, 0.8824, 0.7647, 0.7059, 0.7059, 0.7647, 0.9412)
+mean(accuracy)
+mean(CI)
+mean(sensitivity)
+mean(specificity)
 ```
+
+
 
 
 
@@ -150,8 +152,5 @@ full_model %>%
 ```
 
 
-```{r}
-svm_model(full, "linear")
-svm_model(full, "radial")
-```
+
 
