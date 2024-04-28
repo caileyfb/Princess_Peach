@@ -52,6 +52,42 @@ svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE)
 print(svmfit)
 
 #SVM test model data, task 1
+#SVM task 1
+
+#divide data
+H <- which(Task_1$class == "H") 
+P <- which(Task_1$class == "P")
+
+n_train_H <- ceiling(0.8 * length(H))
+n_train_P <- ceiling(0.8 * length(P))
+
+train_H <- sample(H, size = n_train_H)
+train_P <- sample(P, size = n_train_P)
+
+train_both <- c(train_H, train_P)
+train_ID <- Task_1[train_both, ]
+test_ID <- Task_1[-train_both, ]
+
+#remove ID
+train <- subset(train_ID, select = -ID)
+test <- subset(test_ID, select = -ID)
+
+#grid search
+costs <- seq(from = 0.5, to = 1.5, by = 0.1)
+
+tune_cost <- tune(svm, as.factor(class) ~ ., data = train, ranges = list(cost = costs), kernel = "radial", cross =5)
+
+best_cost <- tune_cost$best.parameters$cost
+
+svm_task1 <- svm(as.factor(class) ~ ., data = train, kernel = "radial", cost = best_cost, gamma = 1)
+
+testing <- predict(svm_task1, test)
+
+confusionMatrix(testing, as.factor(test$class))
+
+summary(svm_task1)
+
+
 library(e1071)
 set.seed(2024)
 
@@ -68,7 +104,7 @@ svm_model <- function(task, kern){
   H <- which(task$class == "H") 
   P <- which(task$class == "P")
   
-  n_tran_H <- ceiling(0.8 * length(H))
+  n_train_H <- ceiling(0.8 * length(H))
   n_train_P <- ceiling(0.8 * length(P))
   
   train_H <- sample(H, size = n_train_H)
@@ -89,49 +125,31 @@ svm_model <- function(task, kern){
   
   best_cost <- tune_cost$best.parameters$cost
   
-  svm_model <- svm(as.factor(class) ~ ., data = train, kernel = kern, cost = best_cost, gamma = 1)
+  svm_task <- svm(as.factor(class) ~ ., data = train, kernel = kern, cost = best_cost, gamma = 0.5)
   
-  testing <- predict(svm_task1, test)
+  testing <- predict(svm_task, test)
   
-  confusionMatrix(testing, as.factor(test$class))
+  confuse <- confusionMatrix(testing, as.factor(test$class))
   
-  summary(svm_task1)
+  print(confuse)
+  print(summary(svm_task))
   }
 
 svm_model(Task_1, "linear")
-  
-#SVM task 1
-  
-#divide data
-H <- which(Task_1$class == "H") 
-P <- which(Task_1$class == "P")
+svm_model(Task_1, "radial")
+svm_model(Task_2, "linear")
+svm_model(Task_2, "radial")
+svm_model(Task_3, "linear")
+svm_model(Task_3, "radial")
+svm_model(Task_4, "linear")
+svm_model(Task_4, "radial")
+svm_model(Task_5, "linear")
+svm_model(Task_5, "radial")
+svm_model(Task_6, "linear")
+svm_model(Task_6, "radial")
+svm_model(Task_7, "linear")
+svm_model(Task_7, "radial")
+svm_model(Task_8, "linear")
+svm_model(Task_8, "radial")
 
-n_train_H <- ceiling(0.8 * length(H))
-n_train_P <- ceiling(0.8 * length(P))
   
-train_H <- sample(H, size = n_train_H)
-train_P <- sample(P, size = n_train_P)
-  
-train_both <- c(train_H, train_P)
-train_ID <- Task_1[train_both, ]
-test_ID <- Task_1[-train_both, ]
-  
-  #remove ID
-train <- subset(train_ID, select = -ID)
-test <- subset(test_ID, select = -ID)
-  
-  #grid search
-costs <- seq(from = 0.5, to = 1.5, by = 0.1)
-  
-tune_cost <- tune(svm, as.factor(class) ~ ., data = train, ranges = list(cost = costs), kernel = "radial", cross =5)
-  
-best_cost <- tune_cost$best.parameters$cost
-
-svm_task1 <- svm(as.factor(class) ~ ., data = train, kernel = "radial", cost = best_cost, gamma = 1)
-
-testing <- predict(svm_task1, test)
-
-confusionMatrix(testing, as.factor(test$class))
-
-summary(svm_task1)
-
