@@ -140,6 +140,34 @@ mean(sensitivity)
 mean(specificity)
 ```
 
+```{r}
+set.seed(2024)
+svm_model(Task_1, 'linear')
+svm_model(Task_2, 'linear')
+svm_model(Task_3, 'linear')
+svm_model(Task_4, 'linear')
+svm_model(Task_5, 'linear')
+svm_model(Task_6, 'linear')
+svm_model(Task_7, 'linear')
+svm_model(Task_8, 'linear')
+svm_model(Task_9, 'linear')
+svm_model(Task_10, 'linear')
+svm_model(Task_11, 'linear')
+svm_model(Task_12, 'linear')
+svm_model(Task_13, 'linear')
+svm_model(Task_14, 'linear')
+svm_model(Task_15, 'linear')
+svm_model(Task_16, 'linear')
+svm_model(Task_17, 'linear')
+svm_model(Task_18, 'linear')
+svm_model(Task_19, 'linear')
+svm_model(Task_20, 'linear')
+svm_model(Task_21, 'linear')
+svm_model(Task_22, 'linear')
+svm_model(Task_23, 'linear')
+svm_model(Task_24, 'linear')
+svm_model(Task_25, 'linear')
+```
 
 
 
@@ -150,6 +178,17 @@ full_model <- data_frame("Kernel" = "Linear", "Accuracy" = 79.41, "Sensitivity" 
 
 full_model %>%
   kable(col.names = c("Kernel", "Accuracy", "Specificity", "Sensitivity"))
+```
+
+```{r}
+Task_by_task <- data_frame("Task" = c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25), "Accuracy" = c(58.82, 76.47, 70.59,61.76,67.65, 73.53, 67.65, 73.53, 76.47, 70.59, 55.88, 67.65, 70.59, 58.88, 70.59, 79.41, 64.71, 79.41, 76.46, 64.71, 55.88, 73.53, 64.71, 76.47, 76.47, 63.26, 60.86, 68.00, 61.43, 71.14, 74.71, 71.29, 69.86, 72.43, 67.86, 62.71, 60.86, 68.00, 61.43, 71.14, 74.71, 71.29, 69.86, 72.43, 67.29, 71.14, 68.57, 74.43, 69.43, 70.47), "Model" = c(rep("Ours", 25), rep("Original", 25)))
+```
+
+```{r}
+ggplot( aes(x=Task, y=Accuracy, color = Model), data= Task_by_task) +
+  scale_y_continuous(name="Accuracy(%)", limits = c(25, 100)) + 
+  geom_line() +
+  geom_point()
 ```
 
 
