@@ -1,0 +1,49 @@
+---
+output: pdf_document
+---
+```{r packages}
+library(readr)
+full <- read_csv("diagnosing_AD_data.csv")
+library(dplyr) #needed for the %>% function in the data subset loops
+library(ggplot2)
+```
+
+```{r accessible subset}
+a=1
+b=6
+c=15
+access <- data.frame(matrix(nrow=174))
+
+for (i in 1:25) {
+  access <- access %>%
+    mutate(full[a:(a+2)], full[b:(b+1)], full[c:(c+1)])
+  
+  a <- a+18
+  b <- b+18
+  c <- c+18
+  
+}
+
+access <- access %>%
+  mutate(full[451:452])
+
+access <- subset(access, select = -(matrix.nrow...174.))
+```
+
+```{r task subsets}
+d <- 2
+
+for (i in (1:25)) {
+  df <- data.frame(access[1], access[d:(d+6)])
+  df <- df %>%
+    mutate(access[177])
+  
+  assign( paste("Task", i, sep = "_"), df)
+  d <- d+7
+}
+
+```
+
+```{r demographics}
+demographics <- data_frame("Class" = c("Patients", "Control Group"), "Age" = c(71.5, 68.9), "Education" = c(10.8, 12.9), "#Women" = c(46,51), "#Men" = c(44,39))
+```
