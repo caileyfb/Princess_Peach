@@ -1,0 +1,176 @@
+---
+title: "STAT 472 RF Code"
+author: "Marissa Gay"
+date: "2024-05-05"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readr)
+full <- diagnosing_AD_data <- read_csv("Downloads/SP24/STAT472/Princess_Peach/diagnosing_AD_data.csv")
+library(dplyr) #needed for the %>% function in the data subset loops
+library(ggplot2)
+library(knitr)
+
+
+```
+
+
+
+```{r}
+
+# creating accessible dataset 
+
+a=1
+b=6
+c=15
+access <- data.frame(matrix(nrow=174))
+
+for (i in 1:25) {
+  access <- access %>%
+    mutate(full[a:(a+2)], full[b:(b+1)], full[c:(c+1)])
+  
+  a <- a+18
+  b <- b+18
+  c <- c+18
+  
+}
+
+access <- access %>%
+  mutate(full[451:452])
+
+access <- subset(access, select = -(matrix.nrow...174.))
+```
+
+
+```{r}
+## task 5 range
+
+d <- 2
+
+
+for (i in (1:5)) {
+  df5 <- data.frame(access[1], access[d:(d+6)])
+  df5 <- df5 %>%
+    mutate(access[177])
+  
+  assign( paste("Task", i, sep = "_"), df)
+  d <- d+7
+}
+
+head(df5)
+
+classlabels <- c("H" = "Healthy", "P" = "Patient")
+
+
+
+ggplot() + theme_bw()+
+  geom_histogram(aes(x = disp_index5, fill = class),
+                          data = df5, 
+                          bins = 100)+
+  facet_wrap(~class, labeller = labeller(class = classlabels))+
+  labs(x= "Dispersion Index",
+       y = "Count",
+       fill = "Health Condition")+
+   scale_fill_discrete(name="Health Condition",
+                         breaks=c("Healthy", "Alzheimer's Patient"))+
+  ggtitle("Task 5 Dispersion Index Distribution")
+
+
+```
+
+
+```{r}
+
+## divide dataset
+
+library(lattice)
+library(caret)
+
+sampsize <- floor(0.8*nrow(access))
+
+sampsize
+
+set.seed(49)
+train_set <- sample(seq_len(nrow(access)), size = sampsize)
+
+train <- access[train_set, ]
+test <- access[-train_set, ]
+
+
+dataset_values <- as.matrix(train)
+Xtrain <- train[, 2:(ncol(train) - 1)]
+Ytrain <- train[, (ncol(train))]
+
+```
+
+
+```{r}
+
+##RF train
+
+library(dplyr)
+library(caret)
+library(randomForest)
+
+ctrl <- trainControl(method = "cv", number = 5)
+
+hypergrid <- expand.grid(
+  mtry = c(3:10)
+)
+
+set.seed(2024)
+
+rfmodel <- train(
+  x = Xtrain,
+  y = Ytrain,
+  method = "rf",
+  trControl = ctrl, 
+  tuneGrid = hypergrid,
+  ntree = 150
+)
+
+#RF test
+
+Xtest <- test[, 2:(ncol(test) - 1)]
+Ytest <- test[, (ncol(test))]
+
+
+best_model <- rfmodel$finalModel
+
+
+predictions <- predict(best_model, newdata =Xtest)
+
+options(kableExtra.auto_format = FALSE)
+
+results <- confusionMatrix(data = predictions, reference = as.factor(Ytest), positive = "P")
+
+
+resultsmatrix <- as.matrix(results, what = "classes")
+
+resultsdf <- as.data.frame(resultsmatrix)
+finaltable <- resultsdf %>% 
+  select(1) %>%
+  slice(1:2,11 ) %>%
+  kable()
+print(finaltable)
+
+# RF confusion matrix
+
+install.packages("kableExtra",repos = "http://cran.us.r-project.org")
+library(kableExtra)
+
+# Create a data frame with your values
+data <- data.frame(c("Sensitivity", "Specificity", "Accuracy"), c(0.9444, 0.8824, 0.9143))
+
+kable(data)
+
+```
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

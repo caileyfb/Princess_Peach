@@ -30,6 +30,10 @@ library(caret)
 diagnosing_AD_data <- read_csv("diagnosing_AD_data.csv", show_col_types = FALSE) %>%
   mutate(class = case_when(class == "H" ~ 0,
                            class == "P" ~ 1))
+```
+
+
+```{r}
 
 task1 <- diagnosing_AD_data %>%
   select(ends_with("e1"), ends_with("x1"), ends_with("r1"), ends_with("n1"), ends_with("t1"))
@@ -323,39 +327,45 @@ stargazer(g2, type="latex",
 ```
 
 \hstart
-yay logistic regression model start (NOT the final draft)
+logistic regression model START
 \hstop
 
 
 ```{r mylatextable, results = "asis"}
 stargazer(g2, type = 'text', out='foo.html', title="Logistic Regression Results for Task 2 Model",covariate.labels=c("Air Time","Paper Time",
 "Dispersment Index","Maximum X Extension","Maximum Y Extension","Number of Pendowns"), dep.var.labels=c("Class"), no.space=TRUE, single.row=TRUE)
+
+stargazer(g15, type = 'text', out='foo15.html', title="Logistic Regression Results for Task 15 Model",covariate.labels=c("Air Time","Paper Time","Maximum X Extension","Maximum Y Extension","Number of Pendowns"), dep.var.labels=c("Class"), no.space=TRUE, single.row=TRUE)
+
+
+
+g15 <- glm(class ~ air_time15 + paper_time15 + max_x_extension15 + max_y_extension15 + num_of_pendown15, data = diagnosing_AD_data, family=binomial(link="logit"))
 ```
 
 
 \hstart
-1st attempt for table of many. for small data task1
+1st attempt for small data task1
 \hstop
 
 
 ```{r}
-g1 <- glm(class ~ air_time1 + paper_time1 + disp_index1 + max_x_extension1 + max_y_extension1 + num_of_pendown1, data = diagnosing_AD_data, family=binomial(link="logit"))
+g1 <- glm(class ~ air_time1 + paper_time1 + max_x_extension1 + max_y_extension1 + num_of_pendown1, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g1,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g1)
 
-g2 <- glm(class ~ air_time2 + paper_time2 + disp_index2 + max_x_extension2 + max_y_extension2 + num_of_pendown2, data = diagnosing_AD_data, family=binomial(link="logit"))
+g2 <- glm(class ~ air_time2 + paper_time2 + max_x_extension2 + max_y_extension2 + num_of_pendown2, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g2,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g2)
 
-g3 <- glm(class ~ air_time3 + paper_time3 + disp_index3 + max_x_extension3 + max_y_extension3 + num_of_pendown3, data = diagnosing_AD_data, family=binomial(link="logit"))
+g3 <- glm(class ~ air_time3 + paper_time3 + max_x_extension3 + max_y_extension3 + num_of_pendown3, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g3,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g3)
 
-g4 <- glm(class ~ air_time4 + paper_time4 + disp_index4 + max_x_extension4 + max_y_extension4 + num_of_pendown4, data = diagnosing_AD_data, family=binomial(link="logit"))
+g4 <- glm(class ~ air_time4 + paper_time4  + max_x_extension4 + max_y_extension4 + num_of_pendown4, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g4,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g4)
 
-g5 <- glm(class ~ air_time5 + paper_time5 + disp_index5 + max_x_extension5 + max_y_extension5 + num_of_pendown5, data = diagnosing_AD_data, family=binomial(link="logit"))
+g5 <- glm(class ~ air_time5 + paper_time5  + max_x_extension5 + max_y_extension5 + num_of_pendown5, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g5,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g5)
 ```
@@ -367,23 +377,23 @@ will be using small data for logistic regression - log reg tasks 1 to 5
 
 
 ```{r}
-g6 <- glm(class ~ air_time6 + paper_time6 + disp_index6 + max_x_extension6 + max_y_extension6 + num_of_pendown6, data = diagnosing_AD_data, family=binomial(link="logit"))
+g6 <- glm(class ~ air_time6 + paper_time6  + max_x_extension6 + max_y_extension6 + num_of_pendown6, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g6,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g6)
 
-g7 <- glm(class ~ air_time7 + paper_time7 + disp_index7 + max_x_extension7 + max_y_extension7 + num_of_pendown7, data = diagnosing_AD_data, family=binomial(link="logit"))
+g7 <- glm(class ~ air_time7 + paper_time7  + max_x_extension7 + max_y_extension7 + num_of_pendown7, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g7,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g7)
 
-g8 <- glm(class ~ air_time8 + paper_time8 + disp_index8 + max_x_extension8 + max_y_extension8 + num_of_pendown8, data = diagnosing_AD_data, family=binomial(link="logit"))
+g8 <- glm(class ~ air_time8 + paper_time8  + max_x_extension8 + max_y_extension8 + num_of_pendown8, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g8,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g8)
 
-g9 <- glm(class ~ air_time9 + paper_time9 + disp_index9 + max_x_extension9 + max_y_extension9 + num_of_pendown9, data = diagnosing_AD_data, family=binomial(link="logit"))
+g9 <- glm(class ~ air_time9 + paper_time9 + max_x_extension9 + max_y_extension9 + num_of_pendown9, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g9,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g9)
 
-g10 <- glm(class ~ air_time10 + paper_time10 + disp_index10 + max_x_extension10 + max_y_extension10 + num_of_pendown10, data = diagnosing_AD_data, family=binomial(link="logit"))
+g10 <- glm(class ~ air_time10 + paper_time10  + max_x_extension10 + max_y_extension10 + num_of_pendown10, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g10,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g10)
 ```
@@ -394,23 +404,23 @@ will be using small data for logistic regression - log reg tasks 6 to 10
 
 
 ```{r}
-g11 <- glm(class ~ air_time11 + paper_time11 + disp_index11 + max_x_extension11 + max_y_extension11 + num_of_pendown11, data = diagnosing_AD_data, family=binomial(link="logit"))
+g11 <- glm(class ~ air_time11 + paper_time11 + max_x_extension11 + max_y_extension11 + num_of_pendown11, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g11,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g11)
 
-g12 <- glm(class ~ air_time12 + paper_time12 + disp_index12 + max_x_extension12 + max_y_extension12 + num_of_pendown12, data = diagnosing_AD_data, family=binomial(link="logit"))
+g12 <- glm(class ~ air_time12 + paper_time12 + max_x_extension12 + max_y_extension12 + num_of_pendown12, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g12,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g12)
 
-g13 <- glm(class ~ air_time13 + paper_time13 + disp_index13 + max_x_extension13 + max_y_extension13 + num_of_pendown13, data = diagnosing_AD_data, family=binomial(link="logit"))
+g13 <- glm(class ~ air_time13 + paper_time13 + max_x_extension13 + max_y_extension13 + num_of_pendown13, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g13,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g13)
 
-g14 <- glm(class ~ air_time14 + paper_time14 + disp_index14 + max_x_extension14 + max_y_extension14 + num_of_pendown14, data = diagnosing_AD_data, family=binomial(link="logit"))
+g14 <- glm(class ~ air_time14 + paper_time14 + max_x_extension14 + max_y_extension14 + num_of_pendown14, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g14,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g14)
 
-g15 <- glm(class ~ air_time15 + paper_time15 + disp_index15 + max_x_extension15 + max_y_extension15 + num_of_pendown15, data = diagnosing_AD_data, family=binomial(link="logit"))
+g15 <- glm(class ~ air_time15 + paper_time15 + max_x_extension15 + max_y_extension15 + num_of_pendown15, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g15,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g15)
 ```
@@ -422,23 +432,23 @@ will be using small data for logistic regression - log reg tasks 11 to 15
 
 
 ```{r}
-g16 <- glm(class ~ air_time16 + paper_time16 + disp_index16 + max_x_extension16 + max_y_extension16 + num_of_pendown16, data = diagnosing_AD_data, family=binomial(link="logit"))
+g16 <- glm(class ~ air_time16 + paper_time16 + max_x_extension16 + max_y_extension16 + num_of_pendown16, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g16,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g16)
 
-g17 <- glm(class ~ air_time17 + paper_time17 + disp_index17 + max_x_extension17 + max_y_extension17 + num_of_pendown17, data = diagnosing_AD_data, family=binomial(link="logit"))
+g17 <- glm(class ~ air_time17 + paper_time17 + max_x_extension17 + max_y_extension17 + num_of_pendown17, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g17,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g17)
 
-g18 <- glm(class ~ air_time18 + paper_time18 + disp_index18 + max_x_extension18 + max_y_extension18 + num_of_pendown18, data = diagnosing_AD_data, family=binomial(link="logit"))
+g18 <- glm(class ~ air_time18 + paper_time18 + max_x_extension18 + max_y_extension18 + num_of_pendown18, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g18,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g18)
 
-g19 <- glm(class ~ air_time19 + paper_time19 + disp_index19 + max_x_extension19 + max_y_extension19 + num_of_pendown19, data = diagnosing_AD_data, family=binomial(link="logit"))
+g19 <- glm(class ~ air_time19 + paper_time19 + max_x_extension19 + max_y_extension19 + num_of_pendown19, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g19,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g19)
 
-g20 <- glm(class ~ air_time20 + paper_time20 + disp_index20 + max_x_extension20 + max_y_extension20 + num_of_pendown20, data = diagnosing_AD_data, family=binomial(link="logit"))
+g20 <- glm(class ~ air_time20 + paper_time20 + max_x_extension20 + max_y_extension20 + num_of_pendown20, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g20,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g20)
 ```
@@ -449,23 +459,23 @@ will be using small data for logistic regression - log reg tasks 16 to 20
 
 
 ```{r}
-g21 <- glm(class ~ air_time21 + paper_time21 + disp_index21 + max_x_extension21 + max_y_extension21 + num_of_pendown21, data = diagnosing_AD_data, family=binomial(link="logit"))
+g21 <- glm(class ~ air_time21 + paper_time21 + max_x_extension21 + max_y_extension21 + num_of_pendown21, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g21,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g21)
 
-g22 <- glm(class ~ air_time22 + paper_time22 + disp_index22 + max_x_extension22 + max_y_extension22 + num_of_pendown22, data = diagnosing_AD_data, family=binomial(link="logit"))
+g22 <- glm(class ~ air_time22 + paper_time22 + max_x_extension22 + max_y_extension22 + num_of_pendown22, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g22,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g22)
 
-g23 <- glm(class ~ air_time23 + paper_time23 + disp_index23 + max_x_extension23 + max_y_extension23 + num_of_pendown23, data = diagnosing_AD_data, family=binomial(link="logit"))
+g23 <- glm(class ~ air_time23 + paper_time23 + max_x_extension23 + max_y_extension23 + num_of_pendown23, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g23,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g23)
 
-g24 <- glm(class ~ air_time24 + paper_time24 + disp_index24 + max_x_extension24 + max_y_extension24 + num_of_pendown24, data = diagnosing_AD_data, family=binomial(link="logit"))
+g24 <- glm(class ~ air_time24 + paper_time24 + max_x_extension24 + max_y_extension24 + num_of_pendown24, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g24,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g24)
 
-g25 <- glm(class ~ air_time25 + paper_time25 + disp_index25 + max_x_extension25 + max_y_extension25 + num_of_pendown25, data = diagnosing_AD_data, family=binomial(link="logit"))
+g25 <- glm(class ~ air_time25 + paper_time25 + max_x_extension25 + max_y_extension25 + num_of_pendown25, data = diagnosing_AD_data, family=binomial(link="logit"))
 print(summ(g25,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g25)
 ```
@@ -504,7 +514,7 @@ logLik(g25)
 ```
 
 \hstart
-mod 18 is BEST (-109.1087); and mod 15 is WORST (-78.79616)
+mod 18 is worst (-109.1087); and mod 15 is BEST (-78.79616) - for AIC curve val
 \hstop
 
 ```{r}
@@ -516,44 +526,42 @@ train_std <- matrix(rep(NA, nrow(train_sub) * ncol(train_sub)), nrow = nrow(trai
 for(i in 1:ncol(train_sub)) {
   train_std[,i] <- c(train_sub[,i] - mean_sub[i])[[1]]/sd_sub[i]
 }
-test1 <- subset(test, select = -ID)
+test1 <- as.data.frame(subset(test))
 train_std <- as.data.frame(train_std)
 colnames(train_std) <- colnames(train_sub)
+
 ```
 
 
 ```{r}
 g1a <- glm(as.factor(train$class) ~ .,data = train_std, family=binomial(link="logit")) #uses centered and standardized
 g1a_full <- glm(as.factor(train$class) ~ .,data = train_sub, family=binomial(link="logit"))
-# subset the test set in a similar manner (so the first 17 columns), and then center and standardize the way we did above, then test the performance of both models (so the test set thats standardized on g1a and the original test set on g1a_full). if the two perform similarly, just go with the non-stanadraized
+# subset the test set in a similar manner (so the first 17 columns), and then center and standardize the way we did above, then test the performance of both models (so the test set that's standardized on g1a and the original test set on g1a_full). if the two perform similarly, just go with the non-standardized
 # try to add in variables one at a time until it no longer works
 print(summ(g1a,model.info=F,digits =4), col.names=c("Estimate", "Standard Error", "Z Value", "P-Value"))
 logLik(g1a)
-
-pred1<-format(round(predict(g1a,test1)))
+#gmrtand grmt mean co linearity are doing same thing take out the overlaps while holding everything else constant.
+pred1<-format(round(predict(g1a,test)))
 conf <- confusionMatrix(pred1, as.factor(test$class))
 
 ```
 
 ```{r}
-pred2<-format(round(predict(g2,test1)))
-conf <- confusionMatrix(pred2, as.factor(test$class))
+#test example demonstrating how to get probabilities from log odds
 
-print(confusionMatrix(pred1, test1))
-print(caret::confusionMatrix(pred1, y_test)$class)
+fitted_log_odds <- predict(g1a) #these are on log odds scale
+fitted_odds <- exp(fitted_log_odds) #these are on odds scale
+fitted_probabilities <- fitted_odds/(1+fitted_odds) #these are probabilities
+confusionMatrix()
+#feed these to the confusion matrix
 ```
-
 
 ```{r}
-
-Mdata <- smalldata %>%
-  select(ends_with("1"), ends_with("14"), ends_with("18"), ends_with("20"), ends_with("23"))
-
-full <- glm(class ~ air_time + paper_time + disp_index + max_x_extension + max_y_extension + num_of_pendown, data = Mdata, family=binomial(link="logit"))
-
-
-
+gta <- glm(as.factor(train$class) ~ ., data= train_std, family=binomial(link="logit"))
+predgta <- predict(gta, test1, type="response")
+pred_labsgta <- ifelse(pred1>0.5,1,0)
+conf_matrixgta <- confusionMatrix(as.factor(pred_labsgta), as.factor(test$class))
+print(conf_matrixgta)
 
 ```
-
 

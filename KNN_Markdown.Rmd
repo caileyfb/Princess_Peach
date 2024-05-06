@@ -1,0 +1,151 @@
+---
+title: "Olivia"
+output: pdf_document
+date: "2024-03-18"
+---
+
+## Dataset
+
+```{r packages}
+library(readr)
+full <- read_csv("diagnosing_AD_data.csv")
+library(dplyr) #needed for the %>% function in the data subset loops
+library(ggplot2)
+```
+
+```{r accessible subset}
+a=1
+b=6
+c=15
+access <- data.frame(matrix(nrow=174))
+
+for (i in 1:25) {
+  access <- access %>%
+    mutate(full[a:(a+2)], full[b:(b+1)], full[c:(c+1)])
+  
+  a <- a+18
+  b <- b+18
+  c <- c+18
+  
+}
+
+access <- access %>%
+  mutate(full[451:452])
+
+access <- subset(access, select = -(matrix.nrow...174.))
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(caret)
+library(knitr)
+library(yardstick)
+```
+
+# Used experiment 1 code
+
+## Setup
+
+```{r}
+num_feature <- 7
+set.seed(42)
+
+#dataset parameters
+test_ratio <- 0.2
+random_states <- c(42, 43, 10, 28, 36, 98, 75, 9, 53, 62, 8, 32, 84, 22, 54, 82, 15, 90, 30, 12)
+
+#classification parameters
+cross_val <- 5
+f_select_threshold <- 0.05
+```
+
+## Dividing Dataset
+
+```{r}
+X <- access[, 2:176]  
+Y <- as.factor(access[, 177]) 
+
+index <- createDataPartition(y = Y, p = 0.2, list = FALSE, times = 1)
+
+x_train <- X[index, ]
+x_test <- X[-index, ]
+y_train <- Y[index]
+y_test <- Y[-index]
+```
+
+## KNN Classification
+
+```{r}
+scoring <- 'Accuracy'
+set.seed(42)
+model <- train(x = x_train, y = y_train, 
+               method = "knn",
+                   tuneGrid = expand.grid(k = c(3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25)),
+                   trControl = trainControl(method = "cv", number = cross_val, classProbs = TRUE),
+                   metric = scoring)
+model
+```
+
+## KNN Classification Part 2
+
+```{r}
+set.seed(42)
+print(model$bestTune)
+
+predictions <- predict(model, newdata = x_test)
+predictions
+
+cm <- confusionMatrix(data = factor(predictions), reference = factor(y_test))
+print(cm)
+print(postResample(pred = factor(predictions), obs = factor(y_test)))
+```
+
+## Table
+
+```{r}
+df <- data.frame(Accuracy = cm$overall["Accuracy"]*100,
+                 Specificity = cm$byClass["Specificity"]*100,
+                 Sensitivity = cm$byClass["Sensitivity"]*100)
+df
+
+kable(df, digits=c(2,2,2))
+```
+
+## K Values Plot
+
+```{r}
+ggplot(model) +
+  geom_line(color = "blue") +
+  geom_point(color="black") +
+  annotate(geom="rect", xmin=11.5, xmax=12.5, ymin=0.622, ymax=0.635, fill="blue", alpha=0.6) +
+  labs(title = "Accuracy of Different K Values",
+       x = "Number of Neighbors (K)",
+       y = "Accuracy") +
+  theme_bw()
+```
+
+## Confusion Matrix
+
+```{r}
+con_matrx <- table(Actual=factor(y_test), Predicted=factor(predictions))
+cm2 <- as.data.frame(as.table(con_matrx))
+
+ggplot(cm2, aes(x=Predicted, y=Actual, fill=Freq)) +
+  geom_tile() + theme_bw() + coord_equal() +
+  scale_fill_distiller(palette = "Blues", direction = 1) +
+  guides(fill = FALSE) +
+  geom_text(aes(label = Freq), color = "black", size = 10) +
+  # following lines only increase text size (optional)
+  theme(axis.text.x = element_text(size = 20),
+      axis.text.y = element_text(size = 20),
+      axis.title.x = element_text(size = 30),
+      axis.title.y = element_text(size = 30))
+
+```
+
+## Appendix
+
+```{r show-code, ref.label = all_labels(), echo = TRUE, eval = FALSE}
+
+```
